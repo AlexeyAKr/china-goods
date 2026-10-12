@@ -30,7 +30,15 @@ with st.form("new_product", clear_on_submit=False):
         weight_kg = st.number_input("Вес (кг) *", min_value=0.0, step=0.1, value=0.5)
         markup = st.number_input("Наценка (%)", min_value=0.0, step=5.0, value=30.0)
 
-    m = calculate(price_cny=price_cny, weight_kg=weight_kg, markup_percent=markup)
+    rate = st.session_state.get("cny_rub_rate", 12.5)
+    delivery = st.session_state.get("delivery_per_kg", 500)
+    m = calculate(
+        price_cny=price_cny,
+        weight_kg=weight_kg,
+        markup_percent=markup,
+        rate=rate,
+        delivery_per_kg=delivery,
+    )
 
     st.divider()
     st.subheader("Расчёт")
