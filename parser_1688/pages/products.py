@@ -2,20 +2,43 @@ import streamlit as st
 
 from parser_1688.core.calculator import calculate
 from shared.db import SessionLocal
-from shared.models import Product
+from shared.models import Category, Product
 
 st.title("Товары")
 st.caption("Каталог товаров из Китая с расчётом маржи.")
 
 session = SessionLocal()
 try:
-    total = session.query(Product).count()
-    st.metric("Всего товаров", total)
+    # Фильтры
+    col1, col2 = st.columns([2, 3])
+    with col1:
+        categories = session.query(Category).order_by(Category.name).all()
+        cat_options = {"Все категории": None}
+        cat_options.update({c.name: c.id for c in categories})
+        selected_cat_name = st.selectbox("Категория", list(cat_options.keys()))
+        selected_cat_id = cat_options[selected_cat_name]
 
-    if total == 0:
-        st.info("Пока нет товаров. Добавь первый в разделе «Новый товар».")
+    with col2:
+        search = st.text_input("Поиск по названию", "")
+
+    # Запрос с фильтрами
+    query = session.query(Product)
+    if selected_cat_id is not None:
+        query = query.filter(Product.category_id == selected_cat_id)
+    if search.strip():
+        query = query.filter(Product.name.ilike(f"%{search.strip()}%"))
+
+    products = query.order_by(Product.created_at.desc()).all()
+    total_all = session.query(Product).count()
+
+    st.metric("Найдено товаров", f"{len(products)} из {total_all}")
+
+    if not products:
+        if total_all == 0:
+            st.info("Пока нет товаров. Добавь первый в разделе «Новый товар».")
+        else:
+            st.warning("По выбранным фильтрам ничего не найдено.")
     else:
-        products = session.query(Product).order_by(Product.created_at.desc()).all()
         for p in products:
             m = calculate(
                 price_cny=p.price_cny or 0,
