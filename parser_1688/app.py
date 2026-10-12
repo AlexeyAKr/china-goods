@@ -44,5 +44,6 @@ with st.sidebar:
 pg = st.navigation([
     st.Page("pages/products.py", title="Товары", icon="📦"),
     st.Page("pages/new_product.py", title="Новый товар", icon="➕"),
+    st.Page("pages/product_detail.py", title="Карточка товара", icon="📝"),
 ])
 pg.run()
