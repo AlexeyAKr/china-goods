@@ -25,8 +25,31 @@
 - Монорепо с папкой `shared/`
 
 ## Что дальше
+
+### План по фазам (изначально)
 - Фаза 1: MVP Project 3 (ручной ввод товаров + маржа)
 - Фаза 2: mini-CRM на PostgreSQL
 - Фаза 3: связка CRM + Project 3
 - Фаза 4: VK-бот → запись заявок в CRM
 - Фаза 5: парсер 1688
+
+### Текущий статус на 12.10.2026
+- ✅ **Фаза 1 завершена** — MVP Project 3 работает
+  - Supabase PostgreSQL подключён
+  - Монорепо `china-goods` на GitHub
+  - Ядро `shared/` (Category, Supplier, Product)
+  - Streamlit UI: список, форма, карточка, фильтры, экспорт CSV
+  - Sidebar с курсом и тарифом
+  - 14 товаров в каталоге
+- ⏳ **Следующая: Фаза 2** — переезд mini-CRM на PostgreSQL
+
+### Известные ограничения
+- **VPN обязателен** для работы с Supabase из РФ (локально)
+- Supabase: драйвер **psycopg v3** + `prepare_threshold: None` + `NullPool`
+- Курс и тариф в sidebar не сохраняются между перезапусками (нужна таблица settings)
+
+### Стек
+- Python 3.12, Streamlit 1.65+, SQLAlchemy 2.1.4
+- psycopg 3.3.6 (НЕ psycopg2!)
+- Supabase PostgreSQL 17.11
+- Alembic 1.20.0 (для будущих миграций)
