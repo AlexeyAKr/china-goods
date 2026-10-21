@@ -146,7 +146,7 @@ if st.button("🚀 Спарсить и сохранить", type="primary"):
                     session.rollback()
                 finally:
                     session.close()
-            progress_bar.progress(min(1.0, (i + batch_size) / len(saved_products))
+            progress_bar.progress(min(1.0, (i + batch_size) / len(saved_products)))
         
         status_text.empty()
         progress_bar.empty()
