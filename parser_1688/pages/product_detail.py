@@ -27,7 +27,17 @@ try:
     if not product:
         st.error(f"Товар с id={product_id} не найден.")
         st.stop()
-
+        
+    st.write("DEBUG: Код дошел до картинки")
+    img_url = product.attributes.get("image_url") if product.attributes else None
+    if img_url:
+        col_img, _ = st.columns([1, 2])
+        with col_img:
+            st.image(img_url, use_container_width=True)
+    else:
+        st.info("Изображение отсутствует")
+            
+        
     categories = session.query(Category).order_by(Category.name).all()
     cat_options = {c.name: c.id for c in categories}
     cat_names = list(cat_options.keys())
